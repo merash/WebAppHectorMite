@@ -4,6 +4,11 @@ namespace WebAPI.Models.Database;
 
 public partial class Cliente
 {
+    public Cliente()
+    {
+        Factura = new HashSet<Factura>();
+    }
+
     [Key]
     public long IdCliente { get; set; }
 
@@ -16,4 +21,6 @@ public partial class Cliente
     public string Telefono { get; set; } = null!;
 
     public string Correo { get; set; } = null!;
+
+    public virtual ICollection<Factura> Factura { get; set; }
 }

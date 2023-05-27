@@ -1,6 +1,6 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Data;
-using WebAPI.Models.Database;
 using WebAPI.Models.Request;
 
 namespace WebAPI.Controllers
@@ -10,16 +10,18 @@ namespace WebAPI.Controllers
     public class ClienteController : ControllerBase
     {
         private readonly DatabaseHectorMiteContext context;
+        private IMapper mapper { get; }
 
-        public ClienteController(DatabaseHectorMiteContext context)
+        public ClienteController(DatabaseHectorMiteContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult GetClientes()
         {
-            return Ok(this.context.Cliente.ToList());
+            return Ok(this.mapper.Map<List<Models.Response.Cliente>>(this.context.Cliente.ToList()));
         }
 
         [HttpGet]
@@ -35,16 +37,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateCliente(CreateCliente createCliente)
+        public IActionResult CreateCliente(Cliente cliente)
         {
-            var newCliente = new Cliente()
-            {
-                Identificacion = createCliente.Identificacion,
-                Nombre = createCliente.Nombre,
-                Direccion = createCliente.Direccion,
-                Telefono = createCliente.Telefono,
-                Correo = createCliente.Correo
-            };
+            var newCliente = this.mapper.Map<Models.Database.Cliente>(cliente);
 
             this.context.Cliente.Add(newCliente);
             this.context.SaveChanges();
@@ -54,7 +49,7 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("{IdCliente:long}")]
-        public IActionResult UpdateCliente([FromRoute] long IdCliente, UpdateCliente updateCliente)
+        public IActionResult UpdateCliente([FromRoute] long IdCliente, Cliente updateCliente)
         {
             var cliente = this.context.Cliente.Find(IdCliente);
 

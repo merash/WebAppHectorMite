@@ -47,5 +47,20 @@ namespace WebAppHectorMite.Services
         {
             return httpClient.PutAsJsonAsync(httpClient.BaseAddress + "Producto/" + producto.IdProducto, producto)?.Result?.Content?.ReadFromJsonAsync<Producto>().Result;
         }
+
+        public List<Factura>? GetFacturas()
+        {
+            return httpClient.GetFromJsonAsync<List<Factura>>(httpClient.BaseAddress + "Factura")?.Result?.ToList();
+        }
+
+        public Factura? GetFactura(long IdFactura)
+        {
+            return httpClient.GetFromJsonAsync<Factura>(httpClient.BaseAddress + "Factura/" + IdFactura)?.Result;
+        }
+
+        public Factura? CreateFactura(Factura factura)
+        {
+            return httpClient.PostAsJsonAsync(httpClient.BaseAddress + "Factura", factura)?.Result?.Content?.ReadFromJsonAsync<Factura>().Result;
+        }
     }
 }

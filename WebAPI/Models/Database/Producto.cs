@@ -4,6 +4,11 @@ namespace WebAPI.Models.Database;
 
 public partial class Producto
 {
+    public Producto()
+    {
+        FacturaDetalle = new HashSet<FacturaDetalle>();
+    }
+
     [Key]
     public long IdProducto { get; set; }
 
@@ -16,4 +21,6 @@ public partial class Producto
     public string UnidadMedida { get; set; } = null!;
 
     public decimal Precio { get; set; }
+
+    public virtual ICollection<FacturaDetalle> FacturaDetalle { get; set; }
 }

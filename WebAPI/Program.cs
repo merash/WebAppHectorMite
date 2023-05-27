@@ -9,7 +9,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<DatabaseHectorMiteContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseHectorMite")));
+builder.Services.AddDbContext<DatabaseHectorMiteContext>(options => options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("DatabaseHectorMite")));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 

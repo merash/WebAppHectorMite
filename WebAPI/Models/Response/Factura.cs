@@ -1,20 +1,6 @@
-﻿namespace WebAPI.Models.Request
+﻿namespace WebAPI.Models.Response
 {
-    public class FacturaDetalle
-    {
-
-        public long IdProducto { get; set; }
-
-        public decimal Cantidad { get; set; }
-
-        public decimal Precio { get; set; }
-
-        public decimal IVA { get; set; }
-
-        public decimal Subtotal { get; set; }
-    }
-
-    public class CreateFactura
+    public class Factura
     {
         public long IdFactura { get; set; }
 

@@ -26,4 +26,6 @@ public partial class FacturaDetalle
     public decimal Subtotal { get; set; }
 
     public virtual Factura Factura { get; set; } = null!;
+
+    public virtual Producto Producto { get; set; } = null!;
 }

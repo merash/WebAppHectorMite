@@ -29,5 +29,7 @@ public partial class Factura
 
     public decimal Total { get; set; }
 
+    public virtual Cliente Cliente { get; set; } = null!;
+
     public virtual ICollection<FacturaDetalle> FacturaDetalle { get; set; }
 }

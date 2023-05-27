@@ -1,6 +1,6 @@
 ﻿namespace WebAPI.Models.Request
 {
-    public class CreateCliente
+    public class Cliente
     {
         public long IdCliente { get; set; }
 

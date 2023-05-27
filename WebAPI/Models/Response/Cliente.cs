@@ -1,7 +1,9 @@
-﻿namespace WebAPI.Models.Request
+﻿namespace WebAPI.Models.Response
 {
-    public class UpdateCliente
+    public class Cliente
     {
+        public long IdCliente { get; set; }
+
         public string Identificacion { get; set; } = null!;
 
         public string Nombre { get; set; } = null!;
