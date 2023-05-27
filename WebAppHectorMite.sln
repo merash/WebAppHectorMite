@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAppHectorMite", "WebAppHectorMite\WebAppHectorMite.csproj", "{389CC2B0-EF9A-447B-94EC-C0A877B21A92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{7F6D64CB-9ADA-4AB9-B99F-9F2287DF3A42}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{389CC2B0-EF9A-447B-94EC-C0A877B21A92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{389CC2B0-EF9A-447B-94EC-C0A877B21A92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{389CC2B0-EF9A-447B-94EC-C0A877B21A92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{389CC2B0-EF9A-447B-94EC-C0A877B21A92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F6D64CB-9ADA-4AB9-B99F-9F2287DF3A42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F6D64CB-9ADA-4AB9-B99F-9F2287DF3A42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F6D64CB-9ADA-4AB9-B99F-9F2287DF3A42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F6D64CB-9ADA-4AB9-B99F-9F2287DF3A42}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FB55198A-F723-4845-A610-32013322A519}
+	EndGlobalSection
+EndGlobal
