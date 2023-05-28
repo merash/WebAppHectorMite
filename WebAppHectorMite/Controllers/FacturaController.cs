@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Diagnostics.Metrics;
 using WebAppHectorMite.Models;
 using WebAppHectorMite.Services;
 
@@ -25,7 +27,16 @@ namespace WebAppHectorMite.Controllers
         // GET: FacturaController/Create
         public ActionResult Create()
         {
-            return View();
+            var productos = webAPI.GetProductos();
+
+            if(productos != null)
+                productos.Insert(0, new Producto { IdProducto = 0, Descripcion = "--Seleccione producto--" });
+
+            ViewBag.productos = productos;
+
+            Factura factura = new Factura { Detalles = new List<FacturaDetalle> { } };
+
+            return View(factura);
         }
 
         // POST: FacturaController/Create

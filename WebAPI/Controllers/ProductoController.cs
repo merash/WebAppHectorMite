@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using WebAPI.Data;
-using WebAPI.Models.Database;
 using WebAPI.Models.Request;
 
 namespace WebAPI.Controllers
@@ -10,23 +10,25 @@ namespace WebAPI.Controllers
     public class ProductoController : ControllerBase
     {
         private readonly DatabaseHectorMiteContext context;
+        private IMapper mapper { get; }
 
-        public ProductoController(DatabaseHectorMiteContext context)
+        public ProductoController(DatabaseHectorMiteContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult GetProductos()
         {
-            return Ok(this.context.Producto.ToList());
+            return Ok(this.mapper.Map<List<Models.Response.Producto>>(this.context.Producto.ToList()));
         }
 
         [HttpGet]
         [Route("{IdProducto:long}")]
         public IActionResult GetProducto([FromRoute] long IdProducto)
         {
-            var producto = this.context.Producto.Find(IdProducto);
+            var producto = this.mapper.Map<Models.Response.Producto>(this.context.Producto.Find(IdProducto));
 
             if (producto == null)
                 return NotFound();
@@ -35,26 +37,19 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateCliente(CreateProducto createProducto)
+        public IActionResult CreateCliente(Producto producto)
         {
-            var newProducto = new Producto()
-            {
-                Codigo = createProducto.Codigo,
-                Descripcion = createProducto.Descripcion,
-                Categoria = createProducto.Categoria,
-                UnidadMedida = createProducto.UnidadMedida,
-                Precio = createProducto.Precio
-            };
+            var newProducto = this.mapper.Map<Models.Database.Producto>(producto);
 
             this.context.Producto.Add(newProducto);
             this.context.SaveChanges();
 
-            return Ok(newProducto);
+            return Ok();
         }
 
         [HttpPut]
         [Route("{IdProducto:long}")]
-        public IActionResult UpdateCliente([FromRoute] long IdProducto, UpdateProducto updateProducto)
+        public IActionResult UpdateCliente([FromRoute] long IdProducto, Producto updateProducto)
         {
             var producto = this.context.Producto.Find(IdProducto);
 
@@ -68,7 +63,7 @@ namespace WebAPI.Controllers
 
                 this.context.SaveChanges();
 
-                return Ok(producto);
+                return Ok();
             }
 
             return NotFound();

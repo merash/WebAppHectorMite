@@ -28,7 +28,7 @@ namespace WebAPI.Controllers
         [Route("{IdCliente:long}")]
         public IActionResult GetCliente([FromRoute] long IdCliente)
         {
-            var cliente = this.context.Cliente.Find(IdCliente);
+            var cliente = this.mapper.Map<Models.Response.Cliente>(this.context.Cliente.Find(IdCliente));
 
             if(cliente == null)
                 return NotFound();
@@ -43,8 +43,8 @@ namespace WebAPI.Controllers
 
             this.context.Cliente.Add(newCliente);
             this.context.SaveChanges();
-            
-            return Ok(newCliente);
+
+            return Ok(this.mapper.Map<Models.Response.Cliente>(newCliente));
         }
 
         [HttpPut]
@@ -63,7 +63,7 @@ namespace WebAPI.Controllers
 
                 this.context.SaveChanges();
 
-                return Ok(cliente);
+                return Ok(this.mapper.Map<Models.Response.Cliente>(cliente));
             }
 
             return NotFound();

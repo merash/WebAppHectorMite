@@ -37,6 +37,52 @@
                 <input asp-for="Fecha" class="form-control" type="date" />
                 <span asp-validation-for="Fecha" class="text-danger"></span>
             </div>
+            
+            <div>
+                <table class="table" id="tblCustomers">
+                    <thead>
+                        <tr>
+                            <th>
+                                Producto
+                            </th>
+                            <th>
+                                Cantidad
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Detalles)
+                        {
+                            <tr>
+                                <td>
+                                    <select asp-items="@(new SelectList(ViewBag.productos,"IdProducto","Descripcion"))"></select>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Cantidad)
+                                </td>
+                                <td>
+                                    <input type="button" value="Remove" onclick="Remove(this)" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>
+                                <select id="ddlProducto" asp-items="@(new SelectList(ViewBag.productos,"IdProducto","Descripcion"))"></select>
+                            </td>
+                            <td>
+                                <input type="text" id="txtCantidad" />
+                            </td>
+                            <td>
+                                <input type="button" id="btnAdd" value="Add" />
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
             <div class="form-group">
                 <label asp-for="Subtotal" class="control-label"></label>
                 <input asp-for="Subtotal" class="form-control" />

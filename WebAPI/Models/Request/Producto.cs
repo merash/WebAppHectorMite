@@ -1,6 +1,6 @@
 ﻿namespace WebAPI.Models.Request
 {
-    public class CreateProducto
+    public class Producto
     {
         public long IdProducto { get; set; }
 
