@@ -44,7 +44,7 @@ namespace WebAPI.Controllers
             this.context.Producto.Add(newProducto);
             this.context.SaveChanges();
 
-            return Ok();
+            return Ok(this.mapper.Map<Models.Response.Producto>(newProducto));
         }
 
         [HttpPut]
@@ -63,7 +63,7 @@ namespace WebAPI.Controllers
 
                 this.context.SaveChanges();
 
-                return Ok();
+                return Ok(this.mapper.Map<Models.Response.Producto>(producto));
             }
 
             return NotFound();

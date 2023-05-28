@@ -9,6 +9,8 @@ namespace WebAPI.Profiles
             CreateMap<Models.Request.Cliente, Models.Database.Cliente>();
 
             CreateMap<Models.Database.Cliente, Models.Response.Cliente>();
+
+            CreateMap<Models.Response.Cliente, Models.Database.Cliente>();
         }
     }
 }

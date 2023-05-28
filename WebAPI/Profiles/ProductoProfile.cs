@@ -6,9 +6,11 @@ namespace WebAPI.Profiles
     {
         public ProductoProfile()
         {
-            CreateMap<Models.Response.Producto, Models.Database.Producto>();
+            CreateMap<Models.Request.Producto, Models.Database.Producto>();
 
             CreateMap<Models.Database.Producto, Models.Response.Producto>();
+
+            CreateMap<Models.Response.Producto, Models.Database.Producto>();
         }
     }
 }

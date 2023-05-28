@@ -38,14 +38,14 @@ namespace WebAppHectorMite.Services
             return httpClient.GetFromJsonAsync<Producto>(httpClient.BaseAddress + "Producto/" + IdProducto)?.Result;
         }
 
-        public void CreateProducto(Producto producto)
+        public Producto? CreateProducto(Producto producto)
         {
-            httpClient.PostAsJsonAsync(httpClient.BaseAddress + "Producto", producto);
+            return httpClient.PostAsJsonAsync(httpClient.BaseAddress + "Producto", producto)?.Result?.Content?.ReadFromJsonAsync<Producto>().Result;
         }
 
-        public void UpdateProducto(Producto producto)
+        public Producto? UpdateProducto(Producto producto)
         {
-            httpClient.PutAsJsonAsync(httpClient.BaseAddress + "Producto/" + producto.IdProducto, producto);
+            return httpClient.PutAsJsonAsync(httpClient.BaseAddress + "Producto/" + producto.IdProducto, producto)?.Result?.Content?.ReadFromJsonAsync<Producto>().Result;
         }
 
         public List<Factura>? GetFacturas()

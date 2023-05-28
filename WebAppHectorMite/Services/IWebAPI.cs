@@ -11,8 +11,8 @@ namespace WebAppHectorMite.Services
 
         List<Producto>? GetProductos();
         Producto? GetProducto(long IdProducto);
-        void CreateProducto(Producto producto);
-        void UpdateProducto(Producto producto);
+        Producto? CreateProducto(Producto producto);
+        Producto? UpdateProducto(Producto producto);
 
         List<Factura>? GetFacturas();
         Factura? GetFactura(long IdFactura);
