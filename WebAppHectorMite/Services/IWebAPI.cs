@@ -7,7 +7,7 @@ namespace WebAppHectorMite.Services
         List<Cliente>? GetClientes();
         Cliente? GetCliente(long IdCliente);
         Cliente? CreateCliente(Cliente cliente);
-        void UpdateCliente(Cliente cliente);
+        Cliente? UpdateCliente(Cliente cliente);
 
         List<Producto>? GetProductos();
         Producto? GetProducto(long IdProducto);
