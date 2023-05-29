@@ -14,7 +14,7 @@
         public decimal Subtotal { get; set; }
     }
 
-    public class CreateFactura
+    public class Factura
     {
         public long IdFactura { get; set; }
 

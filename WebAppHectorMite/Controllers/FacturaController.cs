@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Diagnostics.Metrics;
 using WebAppHectorMite.Models;
 using WebAppHectorMite.Services;
 
@@ -27,11 +25,13 @@ namespace WebAppHectorMite.Controllers
         // GET: FacturaController/Create
         public ActionResult Create()
         {
+            var clientes = webAPI.GetClientes();
+            if (clientes != null) clientes.Insert(0, new Cliente { IdCliente = 0, Identificacion = string.Empty, Nombre = "--Seleccione cliente--" });
+
             var productos = webAPI.GetProductos();
+            if (productos != null) productos.Insert(0, new Producto { IdProducto = 0, Descripcion = "--Seleccione producto--", Precio = 0 });
 
-            if(productos != null)
-                productos.Insert(0, new Producto { IdProducto = 0, Descripcion = "--Seleccione producto--" });
-
+            ViewBag.clientes = clientes;
             ViewBag.productos = productos;
 
             Factura factura = new Factura { Detalles = new List<FacturaDetalle> { } };
@@ -42,7 +42,7 @@ namespace WebAppHectorMite.Controllers
         // POST: FacturaController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Factura factura)
+        public ActionResult Create([FromBody] Factura factura)
         {
             try
             {

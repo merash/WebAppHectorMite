@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Data;
-using WebAPI.Models.Database;
 using WebAPI.Models.Request;
 
 namespace WebAPI.Controllers
@@ -38,28 +37,14 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateFactura(CreateFactura createFactura)
+        public int CreateFactura(Factura factura)
         {
-            var newFactura = new Factura()
-            {
-                Establecimiento = createFactura.Establecimiento,
-                PuntoEmision = createFactura.PuntoEmision,
-                NumeroFactura = createFactura.NumeroFactura,
-                Fecha = createFactura.Fecha,
-                IdCliente = createFactura.Cliente.IdCliente,
-                Subtotal = createFactura.Subtotal,
-                TotalIVA = createFactura.TotalIVA,
-                Total = createFactura.Total
-            };
-
-            createFactura.Detalles.ForEach(x => newFactura.FacturaDetalle.Add(new Models.Database.FacturaDetalle { IdProducto = x.IdProducto, Cantidad = x.Cantidad, Precio = x.Precio, IVA = x.IVA, Subtotal = x.Subtotal }));
+            var newFactura = this.mapper.Map<Models.Database.Factura>(factura);
 
             this.context.Factura.Add(newFactura);
-            this.context.SaveChanges();
+            int insertedRecords = this.context.SaveChanges();
 
-            createFactura.IdFactura = newFactura.IdFactura;
-
-            return Ok(createFactura);
+            return insertedRecords;
         }
     }
 }

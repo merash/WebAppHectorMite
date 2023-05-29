@@ -37,43 +37,77 @@
                 <input asp-for="Fecha" class="form-control" type="date" />
                 <span asp-validation-for="Fecha" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Cliente" class="control-label"></label>
+                <div>
+                    <select id="ddlCliente">
+                        @foreach (var item in ViewBag.clientes)
+                        {
+                            @if(string.IsNullOrEmpty(item.Identificacion))
+                            {
+                                <option value="@item.IdCliente">@item.Nombre</option>
+                            }
+                            else
+                            {
+                                <option value="@item.IdCliente">@item.Identificacion - @item.Nombre</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
             
             <div>
-                <table class="table" id="tblCustomers">
+                <table class="table" id="tblDetalles">
                     <thead>
                         <tr>
+                            <th style="display: none;">
+                                IdProducto
+                            </th>
                             <th>
                                 Producto
                             </th>
                             <th>
-                                Cantidad
+                                Precio
+                            </th>
+                            <th>
+                                &nbsp;Cantidad&nbsp;
+                            </th>
+                            <th>
+                                IVA
+                            </th>
+                            <th>
+                                Subtotal
                             </th>
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach (var item in Model.Detalles)
-                        {
-                            <tr>
-                                <td>
-                                    <select asp-items="@(new SelectList(ViewBag.productos,"IdProducto","Descripcion"))"></select>
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Cantidad)
-                                </td>
-                                <td>
-                                    <input type="button" value="Remove" onclick="Remove(this)" />
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
+                    <tbody></tbody>
                     <tfoot>
                         <tr>
-                            <td>
-                                <select id="ddlProducto" asp-items="@(new SelectList(ViewBag.productos,"IdProducto","Descripcion"))"></select>
+                            <td style="display: none;">
+                                <label id="lblIdProducto">0</label>
                             </td>
                             <td>
-                                <input type="text" id="txtCantidad" />
+                                <select id="ddlProducto">
+                                    @foreach (var item in ViewBag.productos)
+                                    {
+                                        <option value="@item.IdProducto" precio="@item.Precio">@item.Descripcion</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <label id="lblPrecio">$0.00</label>
+                            </td>
+                            <td>
+                                <input type="button" id="btnUp" value="+" />
+                                <label id="lblCantidad">1</label>
+                                <input type="button" id="btnDown" value="-" />
+                            </td>
+                            <td>
+                                <label id="lblIVA">$0.00</label>
+                            </td>
+                            <td>
+                                <label id="lblSubtotal">$0.00</label>
                             </td>
                             <td>
                                 <input type="button" id="btnAdd" value="Add" />
@@ -85,26 +119,86 @@
                 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
                 <script type="text/javascript" src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
                 <script type="text/javascript">
+                    $("body").on("change", "#ddlProducto", function () {
+                        var lblPrecio = $(this).closest("tr").find("#lblPrecio");
+                        var lblCantidad = $(this).closest("tr").find("#lblCantidad");
+                        var lblIVA = $(this).closest("tr").find("#lblIVA");
+                        var lblSubtotal = $(this).closest("tr").find("#lblSubtotal");
+
+                        var precio = Number($(this).find(":selected").attr('precio'));
+                        var cantidad = Number(lblCantidad.text());
+                        var iva = (precio * cantidad) * 0.12;
+                        var subtotal = precio + iva;
+
+                        lblPrecio.html(precio.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+                        lblIVA.html(iva.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+                        lblSubtotal.html(subtotal.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+                    });
+
+                    $("body").on("click", "#btnUp", function () {
+                        var lblCantidad = $(this).closest("tr").find("#lblCantidad");
+                        var cantidad = Number(lblCantidad.text()) + 1;
+                        lblCantidad.html(cantidad);
+
+                        var lblPrecio = $(this).closest("tr").find("#lblPrecio");
+                        var lblIVA = $(this).closest("tr").find("#lblIVA");
+                        var lblSubtotal = $(this).closest("tr").find("#lblSubtotal");
+                        
+                        var precio = Number(lblPrecio.text().replace(/[^0-9\.-]+/g, ""));
+                        var iva = (precio * cantidad) * 0.12;
+                        var subtotal = precio + iva;
+
+                        lblIVA.html(iva.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+                        lblSubtotal.html(subtotal.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+                    });
+
+                    $("body").on("click", "#btnDown", function () {
+                        var lblCantidad = $(this).closest("tr").find("#lblCantidad");
+                        var cantidad = Number(lblCantidad.text()) - (Number(lblCantidad.text()) > 1 ? 1 : 0);
+                        lblCantidad.html(cantidad);
+
+                        var lblPrecio = $(this).closest("tr").find("#lblPrecio");
+                        var lblIVA = $(this).closest("tr").find("#lblIVA");
+                        var lblSubtotal = $(this).closest("tr").find("#lblSubtotal");
+
+                        var precio = Number(lblPrecio.text().replace(/[^0-9\.-]+/g, ""));
+                        var iva = (precio * cantidad) * 0.12;
+                        var subtotal = precio + iva;
+
+                        lblIVA.html(iva.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+                        lblSubtotal.html(subtotal.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+                    });
+
                     $("body").on("click", "#btnAdd", function () {
-                        //Reference the Name and Country TextBoxes.
-                        var txtName = $("#ddlProducto");
-                        var txtCountry = $("#txtCountry");
+                        var ddlProducto = $("#ddlProducto option:selected");
+                        var lblPrecio = $("#lblPrecio");
+                        var lblCantidad = $("#lblCantidad");
+                        var lblIVA = $("#lblIVA");
+                        var lblSubtotal = $("#lblSubtotal");
 
-                        //Get the reference of the Table's TBODY element.
-                        var tBody = $("#tblCustomers > TBODY")[0];
+                        var tBody = $("#tblDetalles > TBODY")[0];
 
-                        //Add Row.
                         var row = tBody.insertRow(-1);
 
-                        //Add Name cell.
                         var cell = $(row.insertCell(-1));
-                        cell.html(txtName.val());
+                        cell.html(ddlProducto.val());
+                        cell.hide();
 
-                        //Add Country cell.
                         cell = $(row.insertCell(-1));
-                        cell.html(txtCountry.val());
+                        cell.html(ddlProducto.text());
 
-                        //Add Button cell.
+                        cell = $(row.insertCell(-1));
+                        cell.html(lblPrecio.text());
+
+                        cell = $(row.insertCell(-1));
+                        cell.html(lblCantidad.text());
+
+                        cell = $(row.insertCell(-1));
+                        cell.html(lblIVA.text());
+
+                        cell = $(row.insertCell(-1));
+                        cell.html(lblSubtotal.text());
+
                         cell = $(row.insertCell(-1));
                         var btnRemove = $("<input />");
                         btnRemove.attr("type", "button");
@@ -112,44 +206,84 @@
                         btnRemove.val("Remove");
                         cell.append(btnRemove);
 
-                        //Clear the TextBoxes.
-                        txtName.val("");
-                        txtCountry.val("");
+                        $("#ddlProducto").prop('selectedIndex', 0);
+                        lblPrecio.text((0).toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+                        lblCantidad.text(1);
+                        lblIVA.text((0).toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+                        lblSubtotal.text((0).toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+
+                        var subtotal = 0;
+                        var iva = 0;
+                        $("#tblDetalles TBODY TR").each(function () {
+                            var row = $(this);
+                            
+                            var precio = Number(row.find("TD").eq(2).html().replace(/[^0-9\.-]+/g, ""));
+                            var cantidad = Number(row.find("TD").eq(3).html());
+
+                            subtotal = subtotal + (precio * cantidad);
+                            iva = iva + Number(row.find("TD").eq(4).html().replace(/[^0-9\.-]+/g, ""));
+                        });
+                        
+                        $("#Subtotal").val(subtotal.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+                        $("#TotalIVA").val(iva.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+                        $("#Total").val((subtotal + iva).toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
                     });
 
                     function Remove(button) {
-                        //Determine the reference of the Row using the Button.
                         var row = $(button).closest("TR");
                         var name = $("TD", row).eq(0).html();
                         if (confirm("Do you want to delete: " + name)) {
-                            //Get the reference of the Table.
-                            var table = $("#tblCustomers")[0];
+                            var table = $("#tblDetalles")[0];
 
-                            //Delete the Table row using it's Index.
                             table.deleteRow(row[0].rowIndex);
                         }
                     };
 
-                    $("body").on("click", "#btnSave", function () {
-                        //Loop through the Table rows and build a JSON array.
-                        var customers = new Array();
-                        $("#tblCustomers TBODY TR").each(function () {
+                    $("body").on("click", "#Create", function () {
+                        var detalles = new Array();
+                        $("#tblDetalles TBODY TR").each(function () {
                             var row = $(this);
-                            var customer = {};
-                            customer.Name = row.find("TD").eq(0).html();
-                            customer.Country = row.find("TD").eq(1).html();
-                            customers.push(customer);
+
+                            var producto = {};
+                            producto.IdProducto = Number(row.find("TD").eq(0).html());
+
+                            var detalle = {};
+
+                            detalle.Producto = producto;
+                            detalle.Cantidad = Number(row.find("TD").eq(3).html());
+                            detalle.Precio = Number(row.find("TD").eq(2).html().replace(/[^0-9\.-]+/g, ""));
+                            detalle.IVA = Number(row.find("TD").eq(4).html().replace(/[^0-9\.-]+/g, ""));
+                            detalle.Subtotal = Number(row.find("TD").eq(5).html().replace(/[^0-9\.-]+/g, ""));
+
+                            detalles.push(detalle);
                         });
 
-                        //Send the JSON array to Controller using AJAX.
+                        var factura = {
+                            Establecimiento: $("#Establecimiento").val(),
+                            PuntoEmision: $("#PuntoEmision").val(),
+                            NumeroFactura: $("#NumeroFactura").val(),
+                            Fecha: $("#Fecha").val(),
+                            Cliente: {
+                                IdCliente: Number($("#ddlCliente option:selected").val())
+                            },
+                            Detalles: detalles,
+                            Subtotal: Number($("#Subtotal").val().replace(/[^0-9\.-]+/g, "")),
+                            TotalIVA: Number($("#TotalIVA").val().replace(/[^0-9\.-]+/g, "")),
+                            Total: Number($("#Total").val().replace(/[^0-9\.-]+/g, ""))
+                        };
+
                         $.ajax({
+                            url: "http://localhost:5182/Factura",
                             type: "POST",
-                            url: "/Home/InsertCustomers",
-                            data: JSON.stringify(customers),
-                            contentType: "application/json; charset=utf-8",
                             dataType: "json",
-                            success: function (r) {
-                                alert(r + " record(s) inserted.");
+                            data: JSON.stringify(factura),
+                            CORS: true,
+                            headers: {
+                                "accept": "application/json",
+                                'Access-Control-Allow-Origin': '*'
+                            },
+                            success: function (data) {
+                                alert(data + " record(s) inserted.");
                             }
                         });
                     });
@@ -158,21 +292,21 @@
 
             <div class="form-group">
                 <label asp-for="Subtotal" class="control-label"></label>
-                <input asp-for="Subtotal" class="form-control" />
+                <input asp-for="Subtotal" class="form-control" disabled />
                 <span asp-validation-for="Subtotal" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TotalIVA" class="control-label"></label>
-                <input asp-for="TotalIVA" class="form-control" />
+                <input asp-for="TotalIVA" class="form-control" disabled />
                 <span asp-validation-for="TotalIVA" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Total" class="control-label"></label>
-                <input asp-for="Total" class="form-control" />
+                <input asp-for="Total" class="form-control" disabled />
                 <span asp-validation-for="Total" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="button" id="Create" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>

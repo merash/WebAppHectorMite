@@ -76,28 +76,28 @@
                 <thead>
                     <tr>
                         <th>
-                            @Html.DisplayNameFor(model => model.Detalles.FirstOrDefault().Producto.Codigo)
+                            Codigo
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Detalles.FirstOrDefault().Producto.Descripcion)
+                            Descripcion
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Detalles.FirstOrDefault().Producto.Categoria)
+                            Categoria
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Detalles.FirstOrDefault().Producto.UnidadMedida)
+                            UnidadMedida
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Detalles.FirstOrDefault().Cantidad)
+                            Precio
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Detalles.FirstOrDefault().Precio)
+                            Cantidad
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Detalles.FirstOrDefault().IVA)
+                            IVA
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Detalles.FirstOrDefault().Subtotal)
+                            Subtotal
                         </th>
                     </tr>
                 </thead>
@@ -118,10 +118,10 @@
                                 @Html.DisplayFor(modelItem => item.Producto.UnidadMedida)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Cantidad)
+                                @Html.DisplayFor(modelItem => item.Precio)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Precio)
+                                @Html.DisplayFor(modelItem => item.Cantidad)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.IVA)
