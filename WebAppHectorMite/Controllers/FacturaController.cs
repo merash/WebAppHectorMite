@@ -34,21 +34,19 @@ namespace WebAppHectorMite.Controllers
             ViewBag.clientes = clientes;
             ViewBag.productos = productos;
 
-            Factura factura = new Factura { Detalles = new List<FacturaDetalle> { } };
+            Factura factura = new Factura { FacturaDetalle = new List<FacturaDetalle> { } };
 
             return View(factura);
         }
 
-        // POST: FacturaController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([FromBody] Factura factura)
+        public ActionResult CreateFactura([FromBody] Factura factura)
         {
             try
             {
                 webAPI.CreateFactura(factura);
 
-                return RedirectToAction(nameof(Index));
+                return Json(new { redirectToUrl = Url.Action("Index", "Factura") });
             }
             catch
             {

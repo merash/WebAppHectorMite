@@ -45,11 +45,11 @@
                         {
                             @if(string.IsNullOrEmpty(item.Identificacion))
                             {
-                                <option value="@item.IdCliente">@item.Nombre</option>
+                                <option value="@item.IdCliente" identificacion="@item.Identificacion" nombre="@item.Nombre" direccion="@item.Direccion" telefono="@item.Telefono" correo="@item.Correo">@item.Nombre</option>
                             }
                             else
                             {
-                                <option value="@item.IdCliente">@item.Identificacion - @item.Nombre</option>
+                                <option value="@item.IdCliente" identificacion="@item.Identificacion" nombre="@item.Nombre" direccion="@item.Direccion" telefono="@item.Telefono" correo="@item.Correo">@item.Identificacion - @item.Nombre</option>
                             }
                         }
                     </select>
@@ -60,8 +60,17 @@
                 <table class="table" id="tblDetalles">
                     <thead>
                         <tr>
-                            <th style="display: none;">
+                            <th style ="display: none;">
                                 IdProducto
+                            </th>
+                            <th style="display: none;">
+                                Codigo
+                            </th>
+                            <th style="display: none;">
+                                Categoria
+                            </th>
+                            <th style="display: none;">
+                                UnidadMedida
                             </th>
                             <th>
                                 Producto
@@ -87,11 +96,20 @@
                             <td style="display: none;">
                                 <label id="lblIdProducto">0</label>
                             </td>
+                            <td style="display: none;">
+                                <label id="lblCodigo"></label>
+                            </td>
+                            <td style="display: none;">
+                                <label id="lblCategoria"></label>
+                            </td>
+                            <td style="display: none;">
+                                <label id="lblUnidadMedida"></label>
+                            </td>
                             <td>
                                 <select id="ddlProducto">
                                     @foreach (var item in ViewBag.productos)
                                     {
-                                        <option value="@item.IdProducto" precio="@item.Precio">@item.Descripcion</option>
+                                        <option value="@item.IdProducto" codigo="@item.Codigo" categoria="@item.Categoria" unidadmedida="@item.UnidadMedida" precio="@item.Precio">@item.Descripcion</option>
                                     }
                                 </select>
                             </td>
@@ -119,6 +137,46 @@
                 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
                 <script type="text/javascript" src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
                 <script type="text/javascript">
+                    $(document).ready(function () {
+                        $("#Create").click(function () {
+                            var detalles = new Array();
+                            $("#tblDetalles TBODY TR").each(function () {
+                                var row = $(this);
+
+                                var detalle = {};
+                                detalle.IdProducto = Number(row.find("TD").eq(0).html());
+                                detalle.Cantidad = Number(row.find("TD").eq(6).html());
+                                detalle.Precio = Number(row.find("TD").eq(5).html().replace(/[^0-9\.-]+/g, ""));
+                                detalle.IVA = Number(row.find("TD").eq(7).html().replace(/[^0-9\.-]+/g, ""));
+                                detalle.Subtotal = Number(row.find("TD").eq(8).html().replace(/[^0-9\.-]+/g, ""));
+
+                                detalles.push(detalle);
+                            });
+
+                            var factura = {
+                                Establecimiento: $("#Establecimiento").val(),
+                                PuntoEmision: $("#PuntoEmision").val(),
+                                NumeroFactura: $("#NumeroFactura").val(),
+                                Fecha: $("#Fecha").val(),
+                                IdCliente: Number($("#ddlCliente option:selected").val()),
+                                FacturaDetalle: detalles,
+                                Subtotal: Number($("#Subtotal").val().replace(/[^0-9\.-]+/g, "")),
+                                TotalIVA: Number($("#TotalIVA").val().replace(/[^0-9\.-]+/g, "")),
+                                Total: Number($("#Total").val().replace(/[^0-9\.-]+/g, ""))
+                            };
+
+                            $.ajax({
+                                type: "POST",
+                                url: "/Factura/CreateFactura",
+                                data: JSON.stringify(factura),
+                                contentType: "application/json; charset=utf-8",
+                                success: function (response) {
+                                    window.location.href = response.redirectToUrl;
+                                }
+                            });
+                        });
+                    });
+
                     $("body").on("change", "#ddlProducto", function () {
                         var lblPrecio = $(this).closest("tr").find("#lblPrecio");
                         var lblCantidad = $(this).closest("tr").find("#lblCantidad");
@@ -183,6 +241,18 @@
                         var cell = $(row.insertCell(-1));
                         cell.html(ddlProducto.val());
                         cell.hide();
+                        
+                        cell = $(row.insertCell(-1));
+                        cell.html(ddlProducto.attr('codigo'));
+                        cell.hide();
+                        
+                        cell = $(row.insertCell(-1));
+                        cell.html(ddlProducto.attr('categoria'));
+                        cell.hide();
+                        
+                        cell = $(row.insertCell(-1));
+                        cell.html(ddlProducto.attr('unidadmedida'));
+                        cell.hide();                        
 
                         cell = $(row.insertCell(-1));
                         cell.html(ddlProducto.text());
@@ -217,11 +287,11 @@
                         $("#tblDetalles TBODY TR").each(function () {
                             var row = $(this);
                             
-                            var precio = Number(row.find("TD").eq(2).html().replace(/[^0-9\.-]+/g, ""));
-                            var cantidad = Number(row.find("TD").eq(3).html());
+                            var precio = Number(row.find("TD").eq(5).html().replace(/[^0-9\.-]+/g, ""));
+                            var cantidad = Number(row.find("TD").eq(6).html());
 
                             subtotal = subtotal + (precio * cantidad);
-                            iva = iva + Number(row.find("TD").eq(4).html().replace(/[^0-9\.-]+/g, ""));
+                            iva = iva + Number(row.find("TD").eq(7).html().replace(/[^0-9\.-]+/g, ""));
                         });
                         
                         $("#Subtotal").val(subtotal.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
@@ -237,56 +307,7 @@
 
                             table.deleteRow(row[0].rowIndex);
                         }
-                    };
-
-                    $("body").on("click", "#Create", function () {
-                        var detalles = new Array();
-                        $("#tblDetalles TBODY TR").each(function () {
-                            var row = $(this);
-
-                            var producto = {};
-                            producto.IdProducto = Number(row.find("TD").eq(0).html());
-
-                            var detalle = {};
-
-                            detalle.Producto = producto;
-                            detalle.Cantidad = Number(row.find("TD").eq(3).html());
-                            detalle.Precio = Number(row.find("TD").eq(2).html().replace(/[^0-9\.-]+/g, ""));
-                            detalle.IVA = Number(row.find("TD").eq(4).html().replace(/[^0-9\.-]+/g, ""));
-                            detalle.Subtotal = Number(row.find("TD").eq(5).html().replace(/[^0-9\.-]+/g, ""));
-
-                            detalles.push(detalle);
-                        });
-
-                        var factura = {
-                            Establecimiento: $("#Establecimiento").val(),
-                            PuntoEmision: $("#PuntoEmision").val(),
-                            NumeroFactura: $("#NumeroFactura").val(),
-                            Fecha: $("#Fecha").val(),
-                            Cliente: {
-                                IdCliente: Number($("#ddlCliente option:selected").val())
-                            },
-                            Detalles: detalles,
-                            Subtotal: Number($("#Subtotal").val().replace(/[^0-9\.-]+/g, "")),
-                            TotalIVA: Number($("#TotalIVA").val().replace(/[^0-9\.-]+/g, "")),
-                            Total: Number($("#Total").val().replace(/[^0-9\.-]+/g, ""))
-                        };
-
-                        $.ajax({
-                            url: "http://localhost:5182/Factura",
-                            type: "POST",
-                            dataType: "json",
-                            data: JSON.stringify(factura),
-                            CORS: true,
-                            headers: {
-                                "accept": "application/json",
-                                'Access-Control-Allow-Origin': '*'
-                            },
-                            success: function (data) {
-                                alert(data + " record(s) inserted.");
-                            }
-                        });
-                    });
+                    }
                 </script>
             </div>
 

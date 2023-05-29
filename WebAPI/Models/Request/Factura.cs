@@ -1,19 +1,5 @@
 ﻿namespace WebAPI.Models.Request
 {
-    public class FacturaDetalle
-    {
-
-        public long IdProducto { get; set; }
-
-        public decimal Cantidad { get; set; }
-
-        public decimal Precio { get; set; }
-
-        public decimal IVA { get; set; }
-
-        public decimal Subtotal { get; set; }
-    }
-
     public class Factura
     {
         public long IdFactura { get; set; }
@@ -26,9 +12,9 @@
 
         public DateTime Fecha { get; set; }
 
-        public Cliente Cliente { get; set; } = null!;
+        public long IdCliente { get; set; }
 
-        public List<FacturaDetalle> Detalles { get; set; } = null!;
+        public List<FacturaDetalle> FacturaDetalle { get; set; } = null!;
 
         public decimal Subtotal { get; set; }
 

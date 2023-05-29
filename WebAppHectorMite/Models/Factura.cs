@@ -12,9 +12,11 @@
 
         public DateTime Fecha { get; set; }
 
+        public long IdCliente { get; set; }
+
         public Cliente Cliente { get; set; } = null!;
 
-        public List<FacturaDetalle> Detalles { get; set; } = null!;
+        public List<FacturaDetalle> FacturaDetalle { get; set; } = null!;
 
         public decimal Subtotal { get; set; }
 

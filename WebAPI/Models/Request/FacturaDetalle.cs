@@ -1,10 +1,8 @@
-﻿namespace WebAppHectorMite.Models
+﻿namespace WebAPI.Models.Request
 {
     public class FacturaDetalle
     {
         public long IdProducto { get; set; }
-
-        public Producto Producto { get; set; } = null!;
 
         public decimal Cantidad { get; set; }
 

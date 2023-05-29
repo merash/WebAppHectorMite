@@ -60,7 +60,11 @@ namespace WebAppHectorMite.Services
 
         public Factura? CreateFactura(Factura factura)
         {
-            return httpClient.PostAsJsonAsync(httpClient.BaseAddress + "Factura", factura)?.Result?.Content?.ReadFromJsonAsync<Factura>().Result;
+            try
+            {
+                return httpClient.PostAsJsonAsync(httpClient.BaseAddress + "Factura", factura)?.Result?.Content?.ReadFromJsonAsync<Factura>().Result;
+            }
+            catch (Exception ex) { return null; }
         }
     }
 }

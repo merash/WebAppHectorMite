@@ -37,14 +37,14 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public int CreateFactura(Factura factura)
+        public IActionResult CreateFactura(Factura factura)
         {
             var newFactura = this.mapper.Map<Models.Database.Factura>(factura);
 
             this.context.Factura.Add(newFactura);
-            int insertedRecords = this.context.SaveChanges();
+            this.context.SaveChanges();
 
-            return insertedRecords;
+            return Ok(this.mapper.Map<Models.Response.Factura>(factura));
         }
     }
 }

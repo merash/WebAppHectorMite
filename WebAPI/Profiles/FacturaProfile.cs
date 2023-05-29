@@ -6,11 +6,13 @@ namespace WebAPI.Profiles
     {
         public FacturaProfile()
         {
-            CreateMap<Models.Response.Factura, Models.Database.Factura>();
+            CreateMap<Models.Request.Factura, Models.Database.Factura>();
 
             CreateMap<Models.Database.Factura, Models.Response.Factura>()
                 .ForMember(dest => dest.Cliente, opt => opt.MapFrom(src => GetCliente(src.Cliente)))
-                .ForMember(dest => dest.Detalles, opt => opt.MapFrom(src => GetFacturasDetalle(src.FacturaDetalle.ToList())));
+                .ForMember(dest => dest.FacturaDetalle, opt => opt.MapFrom(src => GetFacturasDetalle(src.FacturaDetalle.ToList())));
+
+            CreateMap<Models.Response.Factura, Models.Database.Factura>();
         }
 
         static Models.Response.Cliente GetCliente(Models.Database.Cliente cliente)
