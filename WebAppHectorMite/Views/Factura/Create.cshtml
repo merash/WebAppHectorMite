@@ -45,11 +45,11 @@
                         {
                             @if(string.IsNullOrEmpty(item.Identificacion))
                             {
-                                <option value="@item.IdCliente" identificacion="@item.Identificacion" nombre="@item.Nombre" direccion="@item.Direccion" telefono="@item.Telefono" correo="@item.Correo">@item.Nombre</option>
+                                <option value="@item.IdCliente">@item.Nombre</option>
                             }
                             else
                             {
-                                <option value="@item.IdCliente" identificacion="@item.Identificacion" nombre="@item.Nombre" direccion="@item.Direccion" telefono="@item.Telefono" correo="@item.Correo">@item.Identificacion - @item.Nombre</option>
+                                <option value="@item.IdCliente">@item.Identificacion - @item.Nombre</option>
                             }
                         }
                     </select>
@@ -62,15 +62,6 @@
                         <tr>
                             <th style ="display: none;">
                                 IdProducto
-                            </th>
-                            <th style="display: none;">
-                                Codigo
-                            </th>
-                            <th style="display: none;">
-                                Categoria
-                            </th>
-                            <th style="display: none;">
-                                UnidadMedida
                             </th>
                             <th>
                                 Producto
@@ -96,20 +87,11 @@
                             <td style="display: none;">
                                 <label id="lblIdProducto">0</label>
                             </td>
-                            <td style="display: none;">
-                                <label id="lblCodigo"></label>
-                            </td>
-                            <td style="display: none;">
-                                <label id="lblCategoria"></label>
-                            </td>
-                            <td style="display: none;">
-                                <label id="lblUnidadMedida"></label>
-                            </td>
                             <td>
                                 <select id="ddlProducto">
                                     @foreach (var item in ViewBag.productos)
                                     {
-                                        <option value="@item.IdProducto" codigo="@item.Codigo" categoria="@item.Categoria" unidadmedida="@item.UnidadMedida" precio="@item.Precio">@item.Descripcion</option>
+                                        <option value="@item.IdProducto" precio="@item.Precio">@item.Descripcion</option>
                                     }
                                 </select>
                             </td>
@@ -145,10 +127,10 @@
 
                                 var detalle = {};
                                 detalle.IdProducto = Number(row.find("TD").eq(0).html());
-                                detalle.Cantidad = Number(row.find("TD").eq(6).html());
-                                detalle.Precio = Number(row.find("TD").eq(5).html().replace(/[^0-9\.-]+/g, ""));
-                                detalle.IVA = Number(row.find("TD").eq(7).html().replace(/[^0-9\.-]+/g, ""));
-                                detalle.Subtotal = Number(row.find("TD").eq(8).html().replace(/[^0-9\.-]+/g, ""));
+                                detalle.Cantidad = Number(row.find("TD").eq(3).html());
+                                detalle.Precio = Number(row.find("TD").eq(2).html().replace(/[^0-9\.-]+/g, ""));
+                                detalle.IVA = Number(row.find("TD").eq(4).html().replace(/[^0-9\.-]+/g, ""));
+                                detalle.Subtotal = Number(row.find("TD").eq(5).html().replace(/[^0-9\.-]+/g, ""));
 
                                 detalles.push(detalle);
                             });
@@ -241,18 +223,6 @@
                         var cell = $(row.insertCell(-1));
                         cell.html(ddlProducto.val());
                         cell.hide();
-                        
-                        cell = $(row.insertCell(-1));
-                        cell.html(ddlProducto.attr('codigo'));
-                        cell.hide();
-                        
-                        cell = $(row.insertCell(-1));
-                        cell.html(ddlProducto.attr('categoria'));
-                        cell.hide();
-                        
-                        cell = $(row.insertCell(-1));
-                        cell.html(ddlProducto.attr('unidadmedida'));
-                        cell.hide();                        
 
                         cell = $(row.insertCell(-1));
                         cell.html(ddlProducto.text());
@@ -287,11 +257,11 @@
                         $("#tblDetalles TBODY TR").each(function () {
                             var row = $(this);
                             
-                            var precio = Number(row.find("TD").eq(5).html().replace(/[^0-9\.-]+/g, ""));
-                            var cantidad = Number(row.find("TD").eq(6).html());
+                            var precio = Number(row.find("TD").eq(2).html().replace(/[^0-9\.-]+/g, ""));
+                            var cantidad = Number(row.find("TD").eq(3).html());
 
                             subtotal = subtotal + (precio * cantidad);
-                            iva = iva + Number(row.find("TD").eq(7).html().replace(/[^0-9\.-]+/g, ""));
+                            iva = iva + Number(row.find("TD").eq(4).html().replace(/[^0-9\.-]+/g, ""));
                         });
                         
                         $("#Subtotal").val(subtotal.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
@@ -301,8 +271,7 @@
 
                     function Remove(button) {
                         var row = $(button).closest("TR");
-                        var name = $("TD", row).eq(0).html();
-                        if (confirm("Do you want to delete: " + name)) {
+                        if (confirm("¿Seguro desea eliminar la fila seleccionada?")) {
                             var table = $("#tblDetalles")[0];
 
                             table.deleteRow(row[0].rowIndex);

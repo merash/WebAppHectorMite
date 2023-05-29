@@ -34,7 +34,7 @@ namespace WebAppHectorMite.Controllers
             ViewBag.clientes = clientes;
             ViewBag.productos = productos;
 
-            Factura factura = new Factura { FacturaDetalle = new List<FacturaDetalle> { } };
+            Factura factura = new Factura { Fecha = DateTime.Now, FacturaDetalle = new List<FacturaDetalle> { } };
 
             return View(factura);
         }
